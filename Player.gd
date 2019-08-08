@@ -17,7 +17,7 @@ var raycasts = {'ui_right' : 'RayCastRight',
 			
 var grid
 
-signal hit(collider)
+signal hit(pos,dir)
 
 func _ready():
 	grid = get_parent()
@@ -25,9 +25,8 @@ func _ready():
 func move(dir):
 	facing = dir
 	if get_node(raycasts[facing]).is_colliding():
-		var collider= get_node(raycasts[facing]).get_collider()
-		print(collider.get("position"))
-		emit_signal("hit", collider)
+		var pos= position + moves[facing] * tile_size
+		emit_signal("hit", pos, moves[facing])
 		return
 		
 	can_move = false

@@ -26,6 +26,13 @@ func _ready():
 	grid[player_start_pos.x][player_start_pos.y] = PLAYER
 	add_child(new_player)
 	
+#	#Box
+	var new_box = Box.instance()
+	var pos =Vector2(1,2)
+	new_box.position = map_to_world( pos) + half_tile_size
+	grid[pos.x][pos.y] = BOX
+	add_child(new_box)
+	
 	print_grid()
 	
 	
@@ -67,10 +74,10 @@ func update_child_pos(this_world_pos, direction, type):
 	var this_grid_pos = world_to_map(this_world_pos)
 	var new_grid_pos = this_grid_pos + direction
 	
-	#remove player from current location
-	grid[this_grid_pos.x][this_grid_pos.y] = -1
+	#remove type from current location
+	grid[this_grid_pos.x][this_grid_pos.y] = EMPTY
 	
-	#place child nein new grid location
+	#place child type in new grid location
 	grid[new_grid_pos.x][new_grid_pos.y] = type
 	
 	var new_world_pos= map_to_world( new_grid_pos) + half_tile_size

@@ -28,10 +28,17 @@ func _ready():
 	
 	print_grid()
 	
+	
 	get_node("Player").connect("hit", self, "_collided")
 	
-func _collided(pos):
-	print(world_to_map(pos))
+func _collided(collider):
+	var pos = world_to_map(collider.position)
+	print("HIT")
+	#print(world_to_map(pos))
+	if cell_type(pos) == BOX:
+		#update_child_pos(pos, dir, BOX)
+		print("box")
+		
 
 	
 func is_cell_vacant(origin_grid_pos= Vector2(), direction=Vector2() ):
@@ -50,8 +57,6 @@ func is_cell_vacant(origin_grid_pos= Vector2(), direction=Vector2() ):
 func cell_type(this_world_position= Vector2()):
 	var pos = world_to_map(this_world_position)
 	return grid[pos.x][pos.y]
-	
-	
 	
 #upadte_child_node
 #resume : clean the old position of the grid ( fill it with EMPTY)

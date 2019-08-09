@@ -8,6 +8,7 @@ var grid_size = Vector2()
  
 #var grid = []
 var objectives_position = []
+var objectives = 0
 
 onready var Player = preload("res://Player.tscn")
 onready var Obstacle = preload("res://Obstacle.tscn")
@@ -29,6 +30,7 @@ func _ready():
 		for y in range (grid_size.y):
 			if get_cell(x,y) == OBJECTIVE:
 				objectives_position.append(Vector2(x,y))
+				objectives += 1
 #	#Player
 	var new_player= Player.instance()
 	new_player.position = map_to_world(player_start_pos) + half_tile_size
@@ -41,6 +43,12 @@ func _ready():
 	
 	get_node("Player").connect("hit", self, "_collided")
 	
+	
+func _process(delta):
+	if objectives == 0 :
+		print("Game Over")
+
+
 func _collided(pos, dir):
 	print("Collied" + " (" + str(pos.x) + "," + str(pos.y) + ")")
 	print("Type: " + str(cell_type(pos)))
@@ -69,6 +77,7 @@ func update_tile_map(pos, dir, type) :
 		for i in objectives_position:
 			if Vector2(map_pos.x, map_pos.y) == i :
 				set_cellv(map_pos, OBJECTIVE)
+				objectives += 1
 				break
 			else :
 				set_cellv(map_pos, EMPTY)
@@ -76,6 +85,7 @@ func update_tile_map(pos, dir, type) :
 		#set up type in the new location
 		if get_cellv(new_map_pos) == OBJECTIVE :
 			set_cellv(new_map_pos, BOX_CHECK)
+			objectives -= 1
 		else :
 			set_cellv(new_map_pos, BOX)
 	print_grid()
@@ -164,9 +174,3 @@ func print_grid():
 #	var new_world_pos= map_to_world( new_grid_pos) + half_tile_size
 #	print_grid()
 #	return new_world_pos
-		
-
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass

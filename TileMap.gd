@@ -11,7 +11,7 @@ var grid_size = Vector2()
  
 #var grid = []
 var objectives_position = []
-var objectives = 0
+var objectives 
 
 onready var Player = preload("res://Player.tscn")
 onready var Obstacle = preload("res://Obstacle.tscn")
@@ -52,7 +52,8 @@ func _ready():
 	
 func _process(delta):
 	if objectives == 0 :
-		print("Level Complete")
+		canvas.show_message("Level Complete")
+		set_process(false)
 
 
 func _collided(pos, dir):

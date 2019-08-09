@@ -46,7 +46,7 @@ func _ready():
 	
 func _process(delta):
 	if objectives == 0 :
-		print("Game Over")
+		print("Level Complete")
 
 
 func _collided(pos, dir):

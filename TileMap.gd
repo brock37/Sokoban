@@ -7,31 +7,34 @@ var half_tile_size = tile_size / 2
 var grid_size = Vector2()
  
 var grid = []
+var objectives_position = []
+
 onready var Player = preload("res://Player.tscn")
 onready var Obstacle = preload("res://Obstacle.tscn")
 onready var Box = preload("res://Box.tscn")
+
 var player_start_pos = Vector2(1,1)
 
 func _ready():
 	randomize()
 	grid_size= Vector2(cell_quadrant_size, cell_quadrant_size)
-	#Make an EMPTY grid
+	#Put the tile into the grid
 	for x in range (grid_size.x) :
 		grid.append([])
 		for y in range (grid_size.y) :
 			grid[x].append(get_cell(x,y))
+			
+	#Save objectives position
+	for x in range (grid_size.x):
+		for y in range (grid_size.y):
+			if grid[x][y] == OBJECTIVE:
+				objectives_position.append(Vector2(x,y))
 #	#Player
 	var new_player= Player.instance()
 	new_player.position = map_to_world(player_start_pos) + half_tile_size
 	grid[player_start_pos.x][player_start_pos.y] = PLAYER
 	add_child(new_player)
 	
-#	#Box
-	var new_box = Box.instance()
-	var pos =Vector2(1,2)
-	new_box.position = map_to_world( pos) + half_tile_size
-	grid[pos.x][pos.y] = BOX
-	add_child(new_box)
 	
 	print_grid()
 	

@@ -51,8 +51,9 @@ func _ready():
 	
 func _process(delta):
 	if objectives == 0 :
-		canvas.show_message("Level Complete")
+		canvas.show_level_complete()
 		set_process(false)
+
 
 func _unhandled_input(event):
 	if event is InputEventKey :

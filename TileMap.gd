@@ -122,6 +122,7 @@ func _next_level():
 
 func load_level(world, level) :
 	objectives = 0
+	objectives_position = []
 	#Load level form file
 	var world_level= str(world) + "_" + str(level)
 	var map= load_file("res://level/level" + world_level +".dat")
@@ -141,12 +142,15 @@ func load_level(world, level) :
 				set_cell(x,y, int(type))
 				
 	#Save objectives position
+	print("\n\n _______________")
+	
 	for x in range (grid_size.x):
 		for y in range (grid_size.y):
 			if get_cell(x,y) == OBJECTIVE:
 				objectives_position.append(Vector2(x,y))
 				objectives += 1
-				
+	print(objectives_position)
+	print("_______________")
 	set_process(true)
 
 

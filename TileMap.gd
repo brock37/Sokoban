@@ -44,6 +44,7 @@ func _collided(pos, dir):
 	print(cell_type(pos))
 	if cell_type(pos) == BOX:
 		#update_child_pos(pos, dir, BOX)
+		update_tile_map(pos, dir, BOX)
 		print("box")
 		
 
@@ -84,6 +85,27 @@ func update_child_pos(this_world_pos, direction, type):
 	var new_world_pos= map_to_world( new_grid_pos) + half_tile_size
 	print_grid()
 	return new_world_pos
+	
+func update_tile_map(pos, dir, type) :
+	var map_pos = world_to_map(pos)
+	var new_map_pos = map_pos + dir
+	
+	if grid[new_map_pos.x][new_map_pos.y] != BOX and grid[new_map_pos.x][new_map_pos.y] != WALL:
+		#clear location  in tile map
+		for i in objectives_position:
+			if Vector2(map_pos.x, map_pos.y) == i :
+				set_cellv(map_pos, OBJECTIVE)
+				break
+			else :
+				set_cellv(map_pos, EMPTY)
+	
+		#set up type in the new location
+		if grid[new_map_pos.x][new_map_pos.y] == OBJECTIVE :
+			set_cellv(new_map_pos, BOX_CHECK)
+		else :
+			set_cellv(new_map_pos, BOX)
+	
+		update_child_pos(pos, dir, type)
 	
 	
 func print_grid():

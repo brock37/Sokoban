@@ -130,9 +130,10 @@ func load_level(world, level) :
 	print(map)
 	print("\n\n _______________")
 	
-	for x in range (grid_size.x):
-		for y in range (grid_size.y):
-			var type =map[ x + y * grid_size.y]
+	for y in range (grid_size.x):
+		for x in range (grid_size.y):
+			#var type =map[ x + y * grid_size.y]
+			var type = map[y][x]
 			print("type: " + type)
 			if  int(type) == PLAYER:
 				#Place player on map
@@ -160,9 +161,17 @@ func load_level(world, level) :
 func load_file(path):
 	var file = File.new()
 	file.open(path, file.READ)
-	var content = file.get_as_text()
+	#var content = file.get_as_text()
+	var grid= []
+	for y in grid_size.y:
+		grid.append([])
+		var line = file.get_line()
+		for x in grid_size.x :
+			if line[x] != "\n":
+				grid[y].append(line[x])
 	file.close()
-	return content
+	return grid
+
 
 
 

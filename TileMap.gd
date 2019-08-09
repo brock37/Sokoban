@@ -19,6 +19,9 @@ onready var Box = preload("res://Box.tscn")
 
 var player_start_pos = Vector2(1,1)
 
+var actual_world = 1
+var actual_level = 1
+
 func _ready():
 	parent= get_parent()
 	canvas= parent.get_node("CanvasLayer")
@@ -36,13 +39,14 @@ func _ready():
 	add_child(new_player)
 	
 	#board
-	new_game()
+	load_level(actual_world, actual_level)
 	
 	print_grid()
 	
 	
 	get_node("Player").connect("hit", self, "_collided")
-	canvas.connect("restart_level", self, "_load_level")
+	canvas.connect("restart_level", self, "_restart_level")
+	canvas.connect("next_level", self, "_next_level")
 	
 	
 func _process(delta):
@@ -96,28 +100,32 @@ func update_tile_map(pos, dir, type) :
 			set_cellv(new_map_pos, BOX)
 	print_grid()
 		#update_child_pos(pos, dir, type)
-		
-func new_game():
+	
+func _restart_level():
+	load_level(actual_world, actual_level)
+	
+func _next_level():
+	actual_level += 1
+	load_level(actual_world, actual_level)
+
+func load_level(world, level) :
 	objectives = 0
-	_load_level()
-	set_process(true)
-
-
-func _load_level() :
 	#Load level form file
-	var map= load_file("res://level/level1_1.dat")
+	var world_level= str(world) + "_" + str(level)
+	var map= load_file("res://level/level" + world_level +".dat")
 	print(map)
-	print("\n\n")
+	print("\n\n _______________")
 	for x in range (grid_size.x):
 		for y in range (grid_size.y):
 			var type =map[ x + y * grid_size.y]
 			print("type: " + type)
 			if  int(type) == PLAYER:
 				#Place player on map
+				player_start_pos = Vector2(x,y)
 				get_node("Player").position = map_to_world(player_start_pos) + half_tile_size
-				set_cell(y,x, EMPTY)
+				set_cell(x,y, EMPTY)
 			else :
-				set_cell(y,x, int(type))
+				set_cell(x,y, int(type))
 				
 	#Save objectives position
 	
@@ -127,7 +135,7 @@ func _load_level() :
 				objectives_position.append(Vector2(x,y))
 				objectives += 1
 				
-	
+	set_process(true)
 
 func load_file(path):
 	var file = File.new()
@@ -149,7 +157,7 @@ func print_grid():
 	var line = ""
 	for x in range (grid_size.x) :
 		for y in range (grid_size.y) :
-			line += str(get_cell(x,y))
+			line += str(get_cell(y,x))
 		line += "\n"
 	print(line)
 	return line

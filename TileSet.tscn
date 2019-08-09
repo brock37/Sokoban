@@ -38,34 +38,6 @@ bounce = 0.0
 build_mode = 0
 polygon = PoolVector2Array( -31.4677, -31.839, 31.5323, -31.839, 31.5323, 32.161, -31.4677, 32.161 )
 
-[node name="RayCast2Down" type="RayCast2D" parent="1" index="1"]
-
-enabled = false
-exclude_parent = true
-cast_to = Vector2( 0, 64 )
-collision_mask = 1
-
-[node name="RayCast2Left" type="RayCast2D" parent="1" index="2"]
-
-enabled = false
-exclude_parent = true
-cast_to = Vector2( -64, 0 )
-collision_mask = 1
-
-[node name="RayCast2Up" type="RayCast2D" parent="1" index="3"]
-
-enabled = false
-exclude_parent = true
-cast_to = Vector2( 0, -64 )
-collision_mask = 1
-
-[node name="RayCast2Right" type="RayCast2D" parent="1" index="4"]
-
-enabled = false
-exclude_parent = true
-cast_to = Vector2( 64, 0 )
-collision_mask = 1
-
 [node name="2" type="Sprite" parent="." index="2"]
 
 editor/display_folded = true

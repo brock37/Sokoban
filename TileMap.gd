@@ -52,6 +52,7 @@ func _ready():
 func _process(delta):
 	if objectives == 0 :
 		canvas.show_level_complete()
+		get_node("Player").can_move= false
 		set_process(false)
 
 
@@ -151,6 +152,7 @@ func load_level(world, level) :
 				objectives += 1
 	print(objectives_position)
 	print("_______________")
+	get_node("Player").can_move= true
 	set_process(true)
 
 

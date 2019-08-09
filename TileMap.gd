@@ -50,6 +50,13 @@ func _process(delta):
 		canvas.show_message("Level Complete")
 		set_process(false)
 
+func _unhandled_input(event):
+	if event is InputEventKey :
+		if event.pressed and event.scancode == KEY_ESCAPE:
+			get_tree().quit()
+		elif event.pressed and event.scancode == KEY_S:
+			write_file(print_grid(), "res://level/level1_1.dat")
+			canvas.show_message("Write file")
 
 func _collided(pos, dir):
 	print("Collied" + " (" + str(pos.x) + "," + str(pos.y) + ")")
@@ -98,7 +105,20 @@ func new_game():
 
 func _load_level() :
 	#Load level form file
-	
+	var map= load_file("res://level/level1_1.dat")
+	print(map)
+	print("\n\n")
+	for x in range (grid_size.x):
+		for y in range (grid_size.y):
+			var type =map[ x + y * grid_size.y]
+			print("type: " + type)
+			if  int(type) == PLAYER:
+				#Place player on map
+				get_node("Player").position = map_to_world(player_start_pos) + half_tile_size
+				set_cell(y,x, EMPTY)
+			else :
+				set_cell(y,x, int(type))
+				
 	#Save objectives position
 	
 	for x in range (grid_size.x):
@@ -107,9 +127,20 @@ func _load_level() :
 				objectives_position.append(Vector2(x,y))
 				objectives += 1
 				
-	#Place player on map
-	get_node("Player").position = map_to_world(player_start_pos) + half_tile_size
 	
+
+func load_file(path):
+	var file = File.new()
+	file.open(path, file.READ)
+	var content = file.get_as_text()
+	file.close()
+	return content
+	
+func write_file(content, path):
+	var file = File.new()
+	file.open(path, file.WRITE)
+	file.store_string(content)
+	file.close()
 	
 func print_grid():
 #	for n in range (grid_size.x) :
@@ -121,6 +152,7 @@ func print_grid():
 			line += str(get_cell(x,y))
 		line += "\n"
 	print(line)
+	return line
 	
 	
 #func _ready():

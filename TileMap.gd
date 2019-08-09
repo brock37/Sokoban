@@ -6,7 +6,7 @@ var tile_size = get_cell_size()
 var half_tile_size = tile_size / 2
 var grid_size = Vector2()
  
-var grid = []
+#var grid = []
 var objectives_position = []
 
 onready var Player = preload("res://Player.tscn")
@@ -19,20 +19,20 @@ func _ready():
 	randomize()
 	grid_size= Vector2(cell_quadrant_size, cell_quadrant_size)
 	#Put the tile into the grid
-	for x in range (grid_size.x) :
-		grid.append([])
-		for y in range (grid_size.y) :
-			grid[x].append(get_cell(x,y))
+#	for x in range (grid_size.x) :
+#		grid.append([])
+#		for y in range (grid_size.y) :
+#			grid[x].append(get_cell(x,y))
 			
 	#Save objectives position
 	for x in range (grid_size.x):
 		for y in range (grid_size.y):
-			if grid[x][y] == OBJECTIVE:
+			if get_cell(x,y) == OBJECTIVE:
 				objectives_position.append(Vector2(x,y))
 #	#Player
 	var new_player= Player.instance()
 	new_player.position = map_to_world(player_start_pos) + half_tile_size
-	grid[player_start_pos.x][player_start_pos.y] = PLAYER
+#	grid[player_start_pos.x][player_start_pos.y] = PLAYER
 	add_child(new_player)
 	
 	
@@ -42,58 +42,29 @@ func _ready():
 	get_node("Player").connect("hit", self, "_collided")
 	
 func _collided(pos, dir):
-	print("HIT")
-	print(pos)
-	print(cell_type(pos))
-	if cell_type(pos) == BOX:
+	print("Collied" + " (" + str(pos.x) + "," + str(pos.y) + ")")
+	print("Type: " + str(cell_type(pos)))
+	
+	if cell_type(pos) == BOX or cell_type(pos) == BOX_CHECK:
 		#update_child_pos(pos, dir, BOX)
 		update_tile_map(pos, dir, BOX)
 		print("box")
 		
 
 	
-func is_cell_vacant(origin_grid_pos= Vector2(), direction=Vector2() ):
-	var target_grid_pos = world_to_map(origin_grid_pos) + direction
-	
-	#check target is in the grid
-	if target_grid_pos.x >= 0 and target_grid_pos.x < grid_size.x :
-		if target_grid_pos.y >= 0 and target_grid_pos.y < grid_size.y :
-			#grid return true if the cell is empty
-			if grid[target_grid_pos.x][target_grid_pos.y] == -1 or grid[target_grid_pos.x][target_grid_pos.y] == 3 :
-				return true 
-			else :
-				return false
-	return false
+
 	
 func cell_type(this_world_position= Vector2()):
 	var pos = world_to_map(this_world_position)
 	print(pos)
-	return grid[pos.x][pos.y]
+	return get_cell(pos.x,pos.y)
 	
-#upadte_child_node
-#resume : clean the old position of the grid ( fill it with EMPTY)
-# and change with type of the new position in the grid
-# then return the position in pixel 
-#
-func update_child_pos(this_world_pos, direction, type):
-	var this_grid_pos = world_to_map(this_world_pos)
-	var new_grid_pos = this_grid_pos + direction
-	
-	#remove type from current location
-	grid[this_grid_pos.x][this_grid_pos.y] = EMPTY
-	
-	#place child type in new grid location
-	grid[new_grid_pos.x][new_grid_pos.y] = type
-	
-	var new_world_pos= map_to_world( new_grid_pos) + half_tile_size
-	print_grid()
-	return new_world_pos
 	
 func update_tile_map(pos, dir, type) :
 	var map_pos = world_to_map(pos)
 	var new_map_pos = map_pos + dir
 	
-	if grid[new_map_pos.x][new_map_pos.y] != BOX and grid[new_map_pos.x][new_map_pos.y] != WALL:
+	if get_cellv(new_map_pos) != BOX and get_cellv(new_map_pos) !=BOX_CHECK and get_cellv(new_map_pos) != WALL:
 		#clear location  in tile map
 		for i in objectives_position:
 			if Vector2(map_pos.x, map_pos.y) == i :
@@ -103,18 +74,24 @@ func update_tile_map(pos, dir, type) :
 				set_cellv(map_pos, EMPTY)
 	
 		#set up type in the new location
-		if grid[new_map_pos.x][new_map_pos.y] == OBJECTIVE :
+		if get_cellv(new_map_pos) == OBJECTIVE :
 			set_cellv(new_map_pos, BOX_CHECK)
 		else :
 			set_cellv(new_map_pos, BOX)
-	
-		update_child_pos(pos, dir, type)
+	print_grid()
+		#update_child_pos(pos, dir, type)
 	
 	
 func print_grid():
-	for n in range (grid_size.x) :
-		print(grid[n])
-	print("\n")
+#	for n in range (grid_size.x) :
+#		print(grid[n])
+#	print("\n")
+	var line = ""
+	for x in range (grid_size.x) :
+		for y in range (grid_size.y) :
+			line += str(get_cell(x,y))
+		line += "\n"
+	print(line)
 	
 	
 #func _ready():
@@ -155,6 +132,38 @@ func print_grid():
 #		new_obstacle.position = map_to_world( pos) + half_tile_size
 #		grid[pos.x][pos.y] = WALL
 #		add_child(new_obstacle)
+
+#func is_cell_vacant(origin_grid_pos= Vector2(), direction=Vector2() ):
+#	var target_grid_pos = world_to_map(origin_grid_pos) + direction
+#
+#	#check target is in the grid
+#	if target_grid_pos.x >= 0 and target_grid_pos.x < grid_size.x :
+#		if target_grid_pos.y >= 0 and target_grid_pos.y < grid_size.y :
+#			#grid return true if the cell is empty
+#			if grid[target_grid_pos.x][target_grid_pos.y] == -1 or grid[target_grid_pos.x][target_grid_pos.y] == 3 :
+#				return true 
+#			else :
+#				return false
+#	return false
+
+#upadte_child_node
+#resume : clean the old position of the grid ( fill it with EMPTY)
+# and change with type of the new position in the grid
+# then return the position in pixel 
+#
+#func update_child_pos(this_world_pos, direction, type):
+#	var this_grid_pos = world_to_map(this_world_pos)
+#	var new_grid_pos = this_grid_pos + direction
+#
+#	#remove type from current location
+#	grid[this_grid_pos.x][this_grid_pos.y] = EMPTY
+#
+#	#place child type in new grid location
+#	grid[new_grid_pos.x][new_grid_pos.y] = type
+#
+#	var new_world_pos= map_to_world( new_grid_pos) + half_tile_size
+#	print_grid()
+#	return new_world_pos
 		
 
 #func _process(delta):

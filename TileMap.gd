@@ -30,18 +30,13 @@ func _ready():
 #		for y in range (grid_size.y) :
 #			grid[x].append(get_cell(x,y))
 			
-	#Save objectives position
-	for x in range (grid_size.x):
-		for y in range (grid_size.y):
-			if get_cell(x,y) == OBJECTIVE:
-				objectives_position.append(Vector2(x,y))
-				objectives += 1
+
 #	#Player
 	var new_player= Player.instance()
-	new_player.position = map_to_world(player_start_pos) + half_tile_size
-#	grid[player_start_pos.x][player_start_pos.y] = PLAYER
 	add_child(new_player)
 	
+	#board
+	new_game()
 	
 	print_grid()
 	
@@ -94,6 +89,26 @@ func update_tile_map(pos, dir, type) :
 			set_cellv(new_map_pos, BOX)
 	print_grid()
 		#update_child_pos(pos, dir, type)
+		
+func new_game():
+	objectives = 0
+	_load_level()
+	set_process(true)
+
+
+func _load_level() :
+	#Load level form file
+	
+	#Save objectives position
+	
+	for x in range (grid_size.x):
+		for y in range (grid_size.y):
+			if get_cell(x,y) == OBJECTIVE:
+				objectives_position.append(Vector2(x,y))
+				objectives += 1
+				
+	#Place player on map
+	get_node("Player").position = map_to_world(player_start_pos) + half_tile_size
 	
 	
 func print_grid():

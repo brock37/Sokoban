@@ -15,12 +15,11 @@ var raycasts = {'ui_right' : 'RayCastRight',
 			'ui_up' : 'RayCastUp',
 			'ui_down' : 'RayCastDown'}
 			
-var grid
 
 signal hit(pos,dir)
 
 func _ready():
-	grid = get_parent()
+	pass
 			
 func move(dir):
 	facing = dir
@@ -35,8 +34,7 @@ func move(dir):
 									position + moves[facing] * tile_size,
 									0.8, Tween.TRANS_SINE, Tween.EASE_IN_OUT) 
 	$MoveTween.start()
-	grid.update_child_pos(position,
-						moves[dir], grid.PLAYER)
+
 	return true
 
 func _on_MoveTween_tween_completed(object, key):

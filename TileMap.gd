@@ -76,12 +76,14 @@ func _collided(pos, dir):
 		update_tile_map(pos, dir, BOX)
 		print("box")
 		
-	
+
+
 func cell_type(this_world_position= Vector2()):
 	var pos = world_to_map(this_world_position)
 	print(pos)
 	return get_cell(pos.x,pos.y)
 	
+
 	
 func update_tile_map(pos, dir, type) :
 	var map_pos = world_to_map(pos)
@@ -105,13 +107,18 @@ func update_tile_map(pos, dir, type) :
 			set_cellv(new_map_pos, BOX)
 	print_grid()
 		#update_child_pos(pos, dir, type)
-	
+		
+
+
 func _restart_level():
 	load_level(actual_world, actual_level)
 	
+
+
 func _next_level():
 	actual_level += 1
 	load_level(actual_world, actual_level)
+
 
 func load_level(world, level) :
 	objectives = 0
@@ -120,6 +127,7 @@ func load_level(world, level) :
 	var map= load_file("res://level/level" + world_level +".dat")
 	print(map)
 	print("\n\n _______________")
+	
 	for x in range (grid_size.x):
 		for y in range (grid_size.y):
 			var type =map[ x + y * grid_size.y]
@@ -133,7 +141,6 @@ func load_level(world, level) :
 				set_cell(x,y, int(type))
 				
 	#Save objectives position
-	
 	for x in range (grid_size.x):
 		for y in range (grid_size.y):
 			if get_cell(x,y) == OBJECTIVE:
@@ -142,19 +149,25 @@ func load_level(world, level) :
 				
 	set_process(true)
 
+
+
 func load_file(path):
 	var file = File.new()
 	file.open(path, file.READ)
 	var content = file.get_as_text()
 	file.close()
 	return content
-	
+
+
+
 func write_file(content, path):
 	var file = File.new()
 	file.open(path, file.WRITE)
 	file.store_string(content)
 	file.close()
-	
+
+
+
 func print_grid():
 #	for n in range (grid_size.x) :
 #		print(grid[n])

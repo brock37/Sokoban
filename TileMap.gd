@@ -62,7 +62,11 @@ func _unhandled_input(event):
 		elif event.pressed and event.scancode == KEY_S:
 			write_file(print_grid(), "res://level/level1_1.dat")
 			canvas.show_message("Write file")
-
+		elif event.pressed and event.scancode == KEY_R:
+			_restart_level()
+	
+	
+	
 func _collided(pos, dir):
 	print("Collied" + " (" + str(pos.x) + "," + str(pos.y) + ")")
 	print("Type: " + str(cell_type(pos)))

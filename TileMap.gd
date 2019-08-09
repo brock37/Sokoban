@@ -2,6 +2,9 @@ extends TileMap
 
 enum {EMPTY,  BOX, BOX_CHECK, OBJECTIVE, WALL, PLAYER}
 
+var parent
+var canvas
+
 var tile_size = get_cell_size()
 var half_tile_size = tile_size / 2
 var grid_size = Vector2()
@@ -17,6 +20,8 @@ onready var Box = preload("res://Box.tscn")
 var player_start_pos = Vector2(1,1)
 
 func _ready():
+	parent= get_parent()
+	canvas= parent.get_node("CanvasLayer")
 	randomize()
 	grid_size= Vector2(cell_quadrant_size, cell_quadrant_size)
 	#Put the tile into the grid
@@ -42,6 +47,7 @@ func _ready():
 	
 	
 	get_node("Player").connect("hit", self, "_collided")
+	canvas.connect("restart_level", self, "_load_level")
 	
 	
 func _process(delta):
@@ -58,9 +64,6 @@ func _collided(pos, dir):
 		update_tile_map(pos, dir, BOX)
 		print("box")
 		
-
-	
-
 	
 func cell_type(this_world_position= Vector2()):
 	var pos = world_to_map(this_world_position)
